@@ -1,11 +1,21 @@
 from fastapi import FastAPI
 
+from routers.states import router as state_router
+from routers.cities import router as city_router
+from routers.services import router as service_router
+from routers.sub_services import router as sub_service_router
+
 
 app = FastAPI(
     title="Rental Platform - Property Service",
     version="1.0.0"
 )
 
+
+app.include_router(state_router)
+app.include_router(city_router)
+app.include_router(service_router)
+app.include_router(sub_service_router)
 
 @app.get("/")
 def root():

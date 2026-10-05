@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime
 from sqlalchemy.sql import func
 
-from app.database import Base
+from database import Base
 
 
 class Service(Base):
@@ -12,7 +12,7 @@ class Service(Base):
     name = Column(String(150), nullable=False, unique=True)
 
     description = Column(String(500), nullable=True)
-
+    image_url = Column(String(1000), nullable=True)
     is_active = Column(Boolean, default=True, nullable=False)
 
     created_at = Column(

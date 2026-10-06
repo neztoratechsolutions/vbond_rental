@@ -8,6 +8,7 @@ from routers.sub_services import router as sub_service_router
 from routers.owner_agreement import router as owner_agreement_router
 from routers.property_amenity import router as property_amenity_router
 from routers.amenities import router as amenities_router
+from routers.property_types import router as property_types_router
 
 
 app = FastAPI(
@@ -30,3 +31,4 @@ app.include_router(sub_service_router)
 app.include_router(owner_agreement_router)
 app.include_router(property_amenity_router)
 app.include_router(amenities_router)
+app.include_router(property_types_router)

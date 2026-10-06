@@ -533,3 +533,80 @@ def logout(
     return {
         "message": "Logout successful"
     }
+
+
+# =========================================================
+# GET USERS BY USER TYPE
+# =========================================================
+
+@router.get("/users")
+def get_users(
+    user_type: str | None = None,
+    db: Session = Depends(get_db)
+):
+    # -----------------------------------------------------
+    # Validate user type if filter is provided
+    # -----------------------------------------------------
+
+    if user_type is not None:
+
+        if user_type not in [
+            "owner",
+            "tenant",
+            "technician"
+        ]:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid user type. Use owner, tenant or technician"
+            )
+
+    # -----------------------------------------------------
+    # Get users
+    # -----------------------------------------------------
+
+    query = db.query(User)
+
+    if user_type is not None:
+        query = query.filter(
+            User.user_type == user_type
+        )
+
+    users = (
+        query
+        .order_by(User.id.desc())
+        .all()
+    )
+
+    # -----------------------------------------------------
+    # No users found
+    # -----------------------------------------------------
+
+    if not users:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No users found"
+        )
+
+    # -----------------------------------------------------
+    # Response
+    # -----------------------------------------------------
+
+    return {
+        "status": 200,
+        "message": "Users fetched successfully",
+        "count": len(users),
+        "user_type": user_type,
+        "data": [
+            {
+                "id": user.id,
+                "full_name": user.full_name,
+                "email": user.email,
+                "phone": user.phone,
+                "user_type": user.user_type,
+                "is_active": user.is_active,
+                "created_at": user.created_at,
+                "updated_at": user.updated_at
+            }
+            for user in users
+        ]
+    }
